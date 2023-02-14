@@ -5,6 +5,10 @@ from bs4 import BeautifulSoup
 from models import Stock
 from db import init_db
 import csv
+from asyncio import sleep
+from datetime import datetime
+
+from tortoise.transactions import atomic, in_transaction
 
 async def get_html(url):
     r = await requests.get(url)
@@ -60,19 +64,16 @@ def get_page_data(html):
 
         stock_row_data_list.append(row_data)
 
-        data = {'title': title,
+        data_csv = {'title': title,
                 'in_stock': in_stock,
                 'url': url}
-        write_csv(data)
+        write_csv(data_csv)
 
     return stock_row_data_list
 
 #сохранение в пустую бд
 async def save_stock(list_of_raw_stocks):
-    await Tortoise.init(
-        db_url='postgres://admin:admin@localhost:5432/tammytanuka',
-        modules={'models': ['models']}
-    )
+    await init_db()
     stocks = [Stock(
         title=stock['title'],
         in_stock=False if stock['in_stock'] else True,
@@ -85,65 +86,50 @@ async def save_stock(list_of_raw_stocks):
     print("Наличие пустой БД")
     #print(stocks)
 
-#находит новые товары, которых нет в БД
+#Обновление наличия
 async def update_stock(list_of_raw_stocks):
     stocks = {Stock(
         title=stock['title'],
         in_stock=False if stock['in_stock'] else True,
         url=stock['url']) for stock in list_of_raw_stocks}
 
-    #получаем товары из бд
+    #получение товаров из БД
     stocks_from_db = {stock for stock in await Stock.all()}
-    # вычитаем из спарсенных товаров с сайта товары из бд, получаем новые
+    #новые товары = спарсенные товары - товары из бд
     new_stocks = stocks - stocks_from_db
     print("Новые товары")
     print(new_stocks)
-    # сохраняем их в бд
-    await Stock.bulk_create(stocks)
+    # сохранение новых товаров в бд
+    await Stock.bulk_create(new_stocks)
+
     products_removed_from_shop = stocks_from_db - stocks
     print("Удаленные из магазина товары")
     print(products_removed_from_shop)
 
-    # TODO удалить их используя тортойз орм
-    #в бд все записывается снова, так не надо
+    #Удаление из БД товаров, удаленных из магазина
+    if products_removed_from_shop:
+        removed_products = await Stock.filter(title=products_removed_from_shop.title).all()
+        for products_removed_from_shop in removed_products:
+            await products_removed_from_shop.delete()
+
     pass
-    # находим пересечение и обновляем, вся логика изменения тут, что изменилось у товара
+
+    print("Товары, появившиеся в наличии")
     for new_stock in stocks & stocks_from_db:
         old_products = await Stock.filter(title=new_stock.title).first()
         if old_products:
             if old_products.in_stock != new_stock.in_stock:
-        # все ифы логика сравнения и уведомленпя тут old_stock = new_stock заменяем старые данные на ноыве
-        # если не совпадаэт
-                print("Товары, появившиеся в наличии")
+                # все ифы логика сравнения и уведомленпя тут old_stock = new_stock заменяем старые данные на ноыве
+                # если не совпадает
                 print(old_products)
                 old_products.in_stock = new_stock.in_stock
-                print("Товары, появившиеся в наличии")
-            await old_products.save()
-    #print("Товары, появившиеся в наличии")
+                await old_products.save()
+                await old_products.notify_subscribers(new_stock.new_stock_message)
     #print(old_products)
-
-    #удалить пропавшие новой функцией
-
-    # ужесохраненные =
-    # иф новый товар уже есть, то апдейт
-    # элс добавить новый
-
-    # print("Товары, появившиеся в наличии")
-    # for products in new_stocks:
-    #     old_products = await Stock.filter(in_stock=stocks.in_stock).first()
-    #     if old_products:
-    #         if old_products.in_stock != products.in_stock:
-    #             await old_products.save()
-    #             print(old_products)
-    #     else:
-    #         await products.save()
-
-    # if save_stock.stocks != update_stock.stocks:
-    #     old_products_in_stock = stocks
-    # print(old_products_in_stock)
 
 async def main():
     await init_db()
+
     url = 'https://sigil.me/collection/all'
     page_part = '?PAGEN_1='
 
@@ -155,9 +141,9 @@ async def main():
         stock_row_data_list = get_page_data(await get_html(url_gen))
         # print(full_row_data_list)
         full_row_data_list += stock_row_data_list
-    # print(full_row_data_list)
+    print(full_row_data_list)
 
-    # сохранение в пустую БД
+    #сохранение в пустую БД
     #await save_stock(full_row_data_list)
 
     #обновление БД
@@ -166,6 +152,5 @@ async def main():
 
 if __name__ == '__main__':
     asyncio.run(main())
-    #await asyncio.sleep(300)
 
    # asyncio.run(update_stock())

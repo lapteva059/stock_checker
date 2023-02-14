@@ -11,11 +11,11 @@ bot = Bot(token=API_TOKEN)
 dp = Dispatcher(bot)
 
 start_message = 'Привет! Я сообщу, когда что-то появится в наличии'
-new_in_stock = '{title} в наличии! {url}'
+new_stock_message = '{title} в наличии! {url}'
 
 MESSAGES = {
     'start': start_message,
-    'new_in_stock_message': new_in_stock,
+    'new_in_stock_message': new_stock_message,
     }
 
 @dp.message_handler(commands=['start'])
