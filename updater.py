@@ -38,7 +38,7 @@ async def update_stock(list_of_raw_stocks):
 
     #Удаление из БД товаров, удаленных из магазина
     if products_removed_from_shop:
-        removed_products = await Stock.filter(title=products_removed_from_shop.title).all()
+        removed_products = await Stock.get(title=products_removed_from_shop.title).first()
         for products_removed_from_shop in removed_products:
             await products_removed_from_shop.delete()
 
