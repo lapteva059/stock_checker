@@ -1,6 +1,7 @@
 from tortoise.models import Model
 from tortoise import fields
-
+from tg_bot_loader import bot
+from tg_bot import new_stock_message
 
 class Stock(Model):
     id = fields.IntField(pk=True)
@@ -22,3 +23,7 @@ class Stock(Model):
 
     def __hash__(self):
         return hash(self.title)
+
+    async def notify(self, message):
+        await bot.send_message(text=message)
+
