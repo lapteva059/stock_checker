@@ -8,8 +8,12 @@ from asyncio import sleep
 from datetime import datetime
 from parser import get_page_data, get_html, get_total_pages, get_stock_from_page, get_all_links
 from updater import save_stock, update_stock
+from multiprocessing import Pool
 
 from tortoise.transactions import atomic, in_transaction
+
+# async def get_data_from_links(url_gen):
+#     get_stock_from_page(await get_html(url_gen))
 
 async def main():
     await init_db()
@@ -30,15 +34,18 @@ async def main():
     #print(all_links)
     #print(full_row_data_list)
 
+    for link in enumerate(all_links):
+        stocks = get_stock_from_page(await get_html(url_gen))
+        print(stocks)
+
+    # with Pool(40) as p:
+    #     p.map(get_data_from_links, all_links)
+
     #сохранение в пустую БД
     #await save_stock(full_row_data_list)
 
     #обновление БД
     await update_stock(full_row_data_list)
-
-    for link in enumerate(all_links):
-        stocks = get_stock_from_page(await get_html(url_gen))
-        print(stocks)
 
 if __name__ == '__main__':
     asyncio.run(main())

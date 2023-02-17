@@ -1,6 +1,7 @@
 import asyncio
 from aiohttp_requests import requests
 from bs4 import BeautifulSoup
+from multiprocessing import Pool
 
 async def get_html(url):
     r = await requests.get(url)
@@ -23,20 +24,19 @@ def get_all_links(html):
         links.append(url)
     return links
 
-# def get_stock_from_page(html):
-#     stock = BeautifulSoup(html, 'html.parser')
-#     try:
-#         if stock.find('div', class_='product-info').find('div',class_='product-item-detail-info-container').text is not None:
-#             in_stock = stock.find('div', class_='product-info').find('div',
-#                                                                             class_='product-item-detail-info-container').text.split(
-#                 '\ ')[1]
-#             print(stock.find('div', class_='product-info'))
-#         else:
-#             in_stock = ''
-#     except:
-#         in_stock = ''
-#     #print(in_stock)
-#     return in_stock
+def get_stock_from_page(html):
+    stock = BeautifulSoup(html, 'html.parser')
+    try:
+        if stock.find('a', class_='product-item-detail-buy-button').text is not None:
+            in_stock = stock.find('a', class_='product-item-detail-buy-button').text.split(
+                '\ ')[1]
+            print(stock.find('a', class_='product-item-detail-buy-button').text)
+        else:
+            in_stock = ''
+    except:
+        in_stock = ''
+    print(in_stock)
+    return in_stock
 
 
 
