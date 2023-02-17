@@ -34,9 +34,9 @@ async def main():
     #print(all_links)
     #print(full_row_data_list)
 
-    for link in enumerate(all_links):
-        stocks = get_stock_from_page(await get_html(url_gen))
-        print(stocks)
+    # for link in enumerate(all_links):
+    #     stocks = get_stock_from_page(await get_html(url_gen))
+    #     print(stocks)
 
     # with Pool(40) as p:
     #     p.map(get_data_from_links, all_links)
