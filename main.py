@@ -28,7 +28,6 @@ async def main():
         links = get_all_links(await get_html(url_gen))
         all_links += links
     #print(all_links)
-
     #print(full_row_data_list)
 
     #сохранение в пустую БД
@@ -37,10 +36,9 @@ async def main():
     #обновление БД
     await update_stock(full_row_data_list)
 
-    # for link in all_links:
-    #
-    #     stocks = get_stock_from_page(await get_html(url_gen))
-    #     print(stocks)
+    for link in enumerate(all_links):
+        stocks = get_stock_from_page(await get_html(url_gen))
+        print(stocks)
 
 if __name__ == '__main__':
     asyncio.run(main())

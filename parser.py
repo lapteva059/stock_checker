@@ -23,19 +23,20 @@ def get_all_links(html):
         links.append(url)
     return links
 
-def get_stock_from_page(html):
-    stock = BeautifulSoup(html, 'html.parser')
-    try:
-        if stock.find('div', class_='row flex-middle').find_all('div',class_='product-item-detail-info-container').text is not None:
-            in_stock = stock.find('div', class_='row flex-middle').find_all('div',
-                                                                            class_='product-item-detail-info-container').text.split(
-                '\ ')[1]
-        else:
-            in_stock = ''
-    except:
-        in_stock = ''
-    print(in_stock)
-    return in_stock
+# def get_stock_from_page(html):
+#     stock = BeautifulSoup(html, 'html.parser')
+#     try:
+#         if stock.find('div', class_='product-info').find('div',class_='product-item-detail-info-container').text is not None:
+#             in_stock = stock.find('div', class_='product-info').find('div',
+#                                                                             class_='product-item-detail-info-container').text.split(
+#                 '\ ')[1]
+#             print(stock.find('div', class_='product-info'))
+#         else:
+#             in_stock = ''
+#     except:
+#         in_stock = ''
+#     #print(in_stock)
+#     return in_stock
 
 
 
