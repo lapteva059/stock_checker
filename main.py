@@ -12,8 +12,8 @@ from multiprocessing import Pool
 
 from tortoise.transactions import atomic, in_transaction
 
-# async def get_data_from_links(url_gen):
-#     get_stock_from_page(await get_html(url_gen))
+# async def get_data_from_links(link):
+#     get_stock_from_page(await get_html(link))
 
 async def main():
     await init_db()
@@ -31,16 +31,13 @@ async def main():
 
         links = get_all_links(await get_html(url_gen))
         all_links += links
-    #print(all_links)
-    #print(full_row_data_list)
 
-    # for link in enumerate(all_links):
-    #     stocks = get_stock_from_page(await get_html(url_gen))
-    #     print(stocks)
+    for link in all_links:
+        stocks = get_stock_from_page(await get_html(link))
 
     # with Pool(40) as p:
-    #     p.map(get_data_from_links, all_links)
-
+    #      p.map(get_data_from_links, links)
+    #
     #сохранение в пустую БД
     #await save_stock(full_row_data_list)
 
@@ -49,5 +46,3 @@ async def main():
 
 if __name__ == '__main__':
     asyncio.run(main())
-
-   # asyncio.run(update_stock())

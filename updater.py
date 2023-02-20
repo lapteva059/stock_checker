@@ -9,12 +9,6 @@ async def save_stock(list_of_raw_stocks):
         in_stock=False if stock['in_stock'] else True,
         url=stock['url']) for stock in list_of_raw_stocks]
     await Stock.bulk_create(stocks)
-    #Stock.bulk_create([
-
-   # ])
-    #stocks = await Stock.all()
-    print("Наличие пустой БД")
-    #print(stocks)
 
 #Обновление наличия
 async def update_stock(list_of_raw_stocks):
@@ -32,11 +26,9 @@ async def update_stock(list_of_raw_stocks):
     # сохранение новых товаров в бд
     await Stock.bulk_create(new_stocks)
 
-    products_removed_from_shop = stocks_from_db - stocks
     print("Удаленные из магазина товары")
+    products_removed_from_shop = stocks_from_db - stocks
     print(products_removed_from_shop)
-
-    #Удаление из БД товаров, удаленных из магазина
     if products_removed_from_shop:
         removed_products = await Stock.get(title=products_removed_from_shop.title).first()
         for products_removed_from_shop in removed_products:
