@@ -40,28 +40,16 @@ def get_page_data(html):
     for ad in ads:
         try:
             title = ad.find('div', class_='card-title').text.strip()
-            # print(title)
         except:
             title = ''
 
         try:
             url = 'https://sigil.me' + ad.find('div', class_='card-title').find('a').get('href')
-            # print(url)
         except:
             url = ''
 
-        try:
-            if ad.find('div', class_='card-price').find('small', class_='small').text is not None:
-                in_stock = ad.find('div', class_='card-price').find('small', class_='small').text.split('\ ')[1]
-                # print(in_stock)
-            else:
-                in_stock = ''
-        except:
-            in_stock = ''
-
         row_data = {'title': title,
-                    #'in_stock': get_stock_from_page(html),
-                    'in_stock': in_stock,
+                    'in_stock': get_stock_from_page(html),
                     'url': url}
 
         stock_row_data_list.append(row_data)

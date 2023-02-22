@@ -32,8 +32,8 @@ async def main():
         links = get_all_links(await get_html(url_gen))
         all_links += links
     print(full_row_data_list)
-    # for link in all_links:
-    #     stocks = get_stock_from_page(await get_html(link))
+    for link in all_links:
+        stocks = get_stock_from_page(await get_html(link))
 
     # with Pool(40) as p:
     #      p.map(get_data_from_links, links)
