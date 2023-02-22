@@ -50,19 +50,19 @@ def get_page_data(html):
         except:
             url = ''
 
-        # try:
-        #     if ad.find('div', class_='card-price').find('small', class_='small').text is not None:
-        #         in_stock = ad.find('div', class_='card-price').find('small', class_='small').text.split('\ ')[1]
-        #         # print(in_stock)
-        #     else:
-        #         in_stock = ''
-        # except:
-        #     in_stock = ''
+        try:
+            if ad.find('div', class_='card-price').find('small', class_='small').text is not None:
+                in_stock = ad.find('div', class_='card-price').find('small', class_='small').text.split('\ ')[1]
+                # print(in_stock)
+            else:
+                in_stock = ''
+        except:
+            in_stock = ''
 
         row_data = {'title': title,
-                    'in_stock': get_stock_from_page(html),
+                    #'in_stock': get_stock_from_page(html),
+                    'in_stock': in_stock,
                     'url': url}
 
         stock_row_data_list.append(row_data)
-        # print(stock_row_data_list)
     return stock_row_data_list
