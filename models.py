@@ -3,6 +3,7 @@ from tortoise import fields
 from tg_bot_loader import bot
 from tg_bot import new_stock_message
 
+
 class Stock(Model):
     id = fields.IntField(pk=True)
     title = fields.CharField(unique=True, max_length=200)
