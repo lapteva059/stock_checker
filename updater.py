@@ -1,17 +1,9 @@
 from models import Stock
 from db import init_db
 
-#сохранение в пустую бд
-async def save_stock(list_of_raw_stocks):
-    await init_db()
-    stocks = [Stock(
-        title=stock['title'],
-        in_stock=False if stock['in_stock'] else True,
-        url=stock['url']) for stock in list_of_raw_stocks]
-    await Stock.bulk_create(stocks)
-
 #Обновление наличия
 async def update_stock(list_of_raw_stocks):
+    await init_db()
     stocks = {Stock(
         title=stock['title'],
         in_stock=False if stock['in_stock'] else True,
@@ -26,14 +18,14 @@ async def update_stock(list_of_raw_stocks):
     # сохранение новых товаров в бд
     await Stock.bulk_create(new_products)
 
-    # print("Удаленные из магазина товары")
-    # products_removed_from_shop = stocks_from_db - stocks
-    # print(products_removed_from_shop)
-    # if products_removed_from_shop:
-    #     for removed_product in products_removed_from_shop:
-    #         await Stock.get(title=removed_product.title).first().delete()
-    # #first??
-    # pass
+    print("Удаленные из магазина товары")
+    products_removed_from_shop = stocks_from_db - stocks
+    print(products_removed_from_shop)
+    if products_removed_from_shop:
+        for removed_product in products_removed_from_shop:
+            await Stock.get(title=removed_product.title).first().delete()
+
+    pass
 
     #Изменение наличия
     old_products_new_stock = []

@@ -21,7 +21,7 @@ def get_all_links(html):
         links.append(url)
     return links
 
-def get_stock_from_page(html):
+def get_stock(html):
     soup = BeautifulSoup(html, 'html.parser')
     data = soup.find('a', class_='btn btn-link product-item-detail-buy-button')
     try:
@@ -34,25 +34,18 @@ def get_stock_from_page(html):
     #print(in_stock)
     return in_stock
 
-def get_page_data(html):
+def get_title(html):
     soup = BeautifulSoup(html, 'html.parser')
-    ads = soup.find('div', class_='mb-4 catalog-section').find_all('div', class_='product-item-small-card')
+    title = soup.find('h1', class_='product-title').text.strip()
+    # print(in_stock)
+    return title
+
+def get_page_data(html, url):
     stock_row_data_list = []
-    for ad in ads:
-        try:
-            title = ad.find('div', class_='card-title').text.strip()
-        except:
-            title = ''
+    row_data = {'title': get_title(html),
+                'in_stock': get_stock(html),
+                'url': url}
 
-        try:
-            url = 'https://sigil.me' + ad.find('div', class_='card-title').find('a').get('href')
-        except:
-            url = ''
-
-        row_data = {'title': title,
-                    'in_stock': get_stock_from_page(html),
-                    'url': url}
-
-        stock_row_data_list.append(row_data)
+    stock_row_data_list.append(row_data)
     print(stock_row_data_list)
     return stock_row_data_list
