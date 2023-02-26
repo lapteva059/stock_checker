@@ -1,7 +1,7 @@
 from tortoise.models import Model
 from tortoise import fields
-from tg_bot_loader import bot
-from tg_bot import MESSAGES
+from .tg_bot_loader import bot
+from .tg_bot import MESSAGES
 from tg_bot import new_stock_message
 
 
@@ -28,8 +28,21 @@ class Stock(Model):
 
     @property
     def new_stock_message(self):
-        return MESSAGES['new_stock_message'].format(number=self.number)
+        return MESSAGES['new_stock_message'].format(title=self.title, url=self.url)
 
     async def notify_subscribers(self, message):
-        await bot.send_message(text=message)
+        try:
+            subscribers = [chats_id.chat_id
+                           for chats_id in await ChatId.all()]
+        except Exception:
+            subscribers = []
+        if subscribers:
+            for subscriber in subscribers:
+                await bot.send_message(chat_id=subscriber, text=message)
+
+
+class ChatId(Model):
+    chat_id = fields.CharField(max_length=50, null=True, blank=True)
+
+
 

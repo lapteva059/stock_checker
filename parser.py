@@ -55,9 +55,10 @@ def get_page_data(html, url):
     return stock_row_data_list
 
 async def get_general_data():
-    url = 'https://sigil.me/collection/all'
+    #url = 'https://sigil.me/collection/all'
     page_part = '?PAGEN_1='
 
+    url= 'https://sigil.me/collection/sigil-coins-chekanka/'
     url_eggs = 'https://sigil.me/collection/sigil-eggs/'
     url_adventures = 'https://sigil.me/collection/sigil-adventures/'
 
