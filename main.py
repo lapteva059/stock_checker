@@ -1,9 +1,10 @@
 import asyncio
 from tortoise import Tortoise
-from db import init_db
-from asyncio import sleep
+from aiogram import executor
+
 from parser import get_general_data
 from updater import update_stock
+from tg_bot_loader import dp
 
 
 async def init_db():
@@ -23,3 +24,5 @@ async def main():
 
 if __name__ == '__main__':
     asyncio.run(main())
+    dp.loop.create_task(main())
+    executor.start_polling(dp, skip_updates=True)

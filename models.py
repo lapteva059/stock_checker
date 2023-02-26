@@ -25,6 +25,5 @@ class Stock(Model):
     def __hash__(self):
         return hash(self.title)
 
-    async def notify(self, message):
+    async def notify_subscribers(self, message):
         await bot.send_message(text=message)
-
