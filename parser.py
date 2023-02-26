@@ -31,6 +31,7 @@ def get_stock_from_page(html):
             in_stock = ''
     except:
         in_stock = ''
+    #print(in_stock)
     return in_stock
 
 def get_page_data(html):
@@ -53,4 +54,5 @@ def get_page_data(html):
                     'url': url}
 
         stock_row_data_list.append(row_data)
+    print(stock_row_data_list)
     return stock_row_data_list

@@ -26,15 +26,14 @@ async def update_stock(list_of_raw_stocks):
     # сохранение новых товаров в бд
     await Stock.bulk_create(new_products)
 
-    print("Удаленные из магазина товары")
-    products_removed_from_shop = stocks_from_db - stocks
-    print(products_removed_from_shop)
-    if products_removed_from_shop:
-        removed_products = await Stock.get(title=products_removed_from_shop.title).first()
-        for products_removed_from_shop in removed_products:
-            await products_removed_from_shop.delete()
-
-    pass
+    # print("Удаленные из магазина товары")
+    # products_removed_from_shop = stocks_from_db - stocks
+    # print(products_removed_from_shop)
+    # if products_removed_from_shop:
+    #     for removed_product in products_removed_from_shop:
+    #         await Stock.get(title=removed_product.title).first().delete()
+    # #first??
+    # pass
 
     #Изменение наличия
     old_products_new_stock = []

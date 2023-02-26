@@ -32,12 +32,15 @@ async def main():
         links = get_all_links(await get_html(url_gen))
         all_links += links
 
+    print(all_links)
     for link in all_links:
-        stocks = get_stock_from_page(await get_html(link))
+        stock_row_data_list = get_stock_from_page(await get_html(link))
+        #full_row_data_list += stock_row_data_list
+
 
     # with Pool(40) as p:
     #      p.map(get_data_from_links, links)
-    #
+
     #сохранение в пустую БД
     #await save_stock(full_row_data_list)
 
