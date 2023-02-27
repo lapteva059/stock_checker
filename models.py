@@ -2,7 +2,6 @@ from tortoise.models import Model
 from tortoise import fields
 from tg_bot.tg_bot_loader import bot
 from tg_bot.tg_bot import MESSAGES
-from tg_bot.tg_bot import new_stock_message
 
 
 class Stock(Model):

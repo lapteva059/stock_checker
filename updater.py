@@ -1,5 +1,4 @@
 from models import Stock
-from db import init_db
 
 
 # Обновление наличия
@@ -45,6 +44,7 @@ async def update_stock(list_of_raw_stocks):
             old_product.in_stock = new_stock.in_stock
             await old_product.save()
     print(old_products_new_stock)
+    # оповещение
     if old_products_new_stock:
         for new_product in old_products_new_stock:
             await new_product.notify_subscribers(new_product.new_stock_message)
