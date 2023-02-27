@@ -18,11 +18,14 @@ MESSAGES = {
     'new_stock_message': new_stock_message,
     }
 
+
 @dp.message_handler(commands=['start'])
 async def start(message: types.Message):
-    chat_id = models.ChatId(chat_id=message.chat.id)
+    chat = models.ChatId(
+        chat_id=message.chat.id,
+        username=message.chat.username)
     try:
-        await chat_id.save()
+        await chat.save()
     except UniqueViolationError:
         pass
     await message.reply(MESSAGES['start'])
