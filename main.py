@@ -16,7 +16,7 @@ async def init_db():
     # обновление БД
     while True:
         await update_stock(await get_general_data())
-        await asyncio.sleep(30)
+        await asyncio.sleep(3)
 
 
 async def main():

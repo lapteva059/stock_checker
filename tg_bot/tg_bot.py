@@ -3,7 +3,7 @@ import logging
 from aiogram import Bot, Dispatcher, executor, types
 from settings import API_TOKEN
 
-from models import ChatId
+import models
 
 # Configure logging
 logging.basicConfig(level=logging.INFO)
@@ -13,7 +13,8 @@ bot = Bot(token=API_TOKEN)
 dp = Dispatcher(bot)
 
 start_message = 'Привет! Я сообщу, когда что-то появится в наличии'
-new_stock_message = '{title} в наличии! {url}'
+new_stock_message = '{title} в наличии!' \
+                    ' {url}'
 
 MESSAGES = {
     'start': start_message,
@@ -21,9 +22,9 @@ MESSAGES = {
     }
 
 @dp.message_handler(commands=['start'])
-async def send_welcome(message: types.Message):
+async def start(message: types.Message):
     await message.reply(MESSAGES['start'])
-    chat_id = ChatId(chat_id=message.chat.id)
+    chat_id = models.ChatId(chat_id=message.chat.id)
     await chat_id.save()
 
 

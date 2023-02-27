@@ -17,8 +17,10 @@ async def update_stock(list_of_raw_stocks):
     print(new_products)
     # сохранение новых товаров в бд
     await Stock.bulk_create(new_products)
-    # for new_products:
-    #     await (send_message)
+    # оповещение
+    if new_products:
+        for new_product in new_products:
+            await new_products.notify_subscribers(new_product.new_stock_message)
 
     print("Удаленные из магазина товары")
     products_removed_from_shop = stocks_from_db - stocks
@@ -43,6 +45,7 @@ async def update_stock(list_of_raw_stocks):
             old_product.in_stock = new_stock.in_stock
             await old_product.save()
             await old_product.notify_subscribers(new_stock.new_stock_message)
+            await new_stock.notify_subscribers(new_stock.new_stock_message)
     print("Товары, появившиеся в наличии")
     print(old_products_new_stock)
     print("Товары, ушедшие из наличия")

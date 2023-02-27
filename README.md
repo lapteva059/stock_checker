@@ -1,2 +1,2 @@
 # stock_checker
-Telegram bot and parser that notifies you when products are in stock
+Telegram bot sends a notification when the product is available on the site. 

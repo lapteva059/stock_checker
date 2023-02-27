@@ -7,7 +7,7 @@ async def init():
         modules={'models': ['models']}
     )
     # Generate the schema
-    await Tortoise.generate_schemas()
+    await Tortoise.generate_schemas(safe=False)
 
 # run_async is a helper function to run simple async Tortoise scripts.
 if __name__ == "__main__":
