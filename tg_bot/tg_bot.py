@@ -1,16 +1,13 @@
 import logging
 
-from aiogram import Bot, Dispatcher, executor, types
-from settings import API_TOKEN
+from aiogram import executor, types
+from asyncpg.exceptions import UniqueViolationError
 
+from .tg_bot_loader import dp
 import models
 
 # Configure logging
 logging.basicConfig(level=logging.INFO)
-
-# Initialize bot and dispatcher
-bot = Bot(token=API_TOKEN)
-dp = Dispatcher(bot)
 
 start_message = 'Привет! Я сообщу, когда что-то появится в наличии'
 new_stock_message = '{title} в наличии!' \
@@ -23,9 +20,12 @@ MESSAGES = {
 
 @dp.message_handler(commands=['start'])
 async def start(message: types.Message):
-    await message.reply(MESSAGES['start'])
     chat_id = models.ChatId(chat_id=message.chat.id)
-    await chat_id.save()
+    try:
+        await chat_id.save()
+    except UniqueViolationError:
+        pass
+    await message.reply(MESSAGES['start'])
 
 
 if __name__ == '__main__':

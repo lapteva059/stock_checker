@@ -32,20 +32,23 @@ async def update_stock(list_of_raw_stocks):
     pass
 
     # Изменение наличия
-    old_products_new_stock = []
-    old_products_out_of_stock = []
+    old_products_new_stock = {}
+    old_products_out_of_stock = {}
     for new_stock in stocks_from_db & stocks:
         old_product = await Stock.get(title=new_stock.title).first()
         if old_product:
             if new_stock.in_stock != old_product.in_stock:
                 if old_product.in_stock is False:
-                    old_products_new_stock.append(old_product)
+                    old_products_new_stock.add(old_product)
                 else:
-                    old_products_out_of_stock.append(old_product)
+                    old_products_out_of_stock.add(old_product)
             old_product.in_stock = new_stock.in_stock
             await old_product.save()
-            await old_product.notify_subscribers(new_stock.new_stock_message)
-            await new_stock.notify_subscribers(new_stock.new_stock_message)
+    print(old_products_new_stock)
+    if old_products_new_stock:
+        for new_product in old_products_new_stock:
+            await new_product.notify_subscribers(new_product.new_stock_message)
+
     print("Товары, появившиеся в наличии")
     print(old_products_new_stock)
     print("Товары, ушедшие из наличия")

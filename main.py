@@ -4,7 +4,7 @@ from aiogram import executor
 
 from parser import get_general_data
 from updater import update_stock
-from tg_bot.tg_bot_loader import dp
+from tg_bot.tg_bot import dp
 
 
 async def init_db():

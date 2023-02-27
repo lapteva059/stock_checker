@@ -42,7 +42,7 @@ class Stock(Model):
 
 
 class ChatId(Model):
-    chat_id = fields.CharField(max_length=50, null=True, blank=True)
+    chat_id = fields.CharField(max_length=50, null=True, blank=True, unique=True)
 
 
 
