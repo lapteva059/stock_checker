@@ -1,5 +1,6 @@
 from tortoise.models import Model
 from tortoise import fields
+
 from tg_bot.tg_bot_loader import bot
 from tg_bot.tg_bot import MESSAGES
 
@@ -12,6 +13,7 @@ class Stock(Model):
     created_date = fields.DatetimeField(auto_now_add=True, null=False)
     updated_date = fields.DatetimeField(auto_now=True, null=False)
     new_product = fields.BooleanField(default=False)
+    palette = fields.BooleanField(default=False)
 
     def __str__(self):
         return self.title
@@ -28,6 +30,10 @@ class Stock(Model):
     @property
     def new_stock_message(self):
         return MESSAGES['new_stock_message'].format(title=self.title, url=self.url)
+
+    @property
+    def new_product_message(self):
+        return MESSAGES['new_product_message'].format(title=self.title, url=self.url)
 
     async def notify_subscribers(self, message):
         try:

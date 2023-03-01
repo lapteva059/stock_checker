@@ -2,6 +2,7 @@ import logging
 
 from aiogram import executor, types
 from asyncpg.exceptions import UniqueViolationError
+from tortoise.exceptions import IntegrityError
 
 from .tg_bot_loader import dp
 import models
@@ -12,10 +13,13 @@ logging.basicConfig(level=logging.INFO)
 start_message = 'Привет! Я сообщу, когда что-то появится в наличии'
 new_stock_message = '{title} в наличии!' \
                     ' {url}'
+new_product_message = 'На сайт добавлен новый товар {title}, но пока его нет в наличии. Я сообщу, когда появится. ' \
+                     '{url}'
 
 MESSAGES = {
     'start': start_message,
     'new_stock_message': new_stock_message,
+    'new_product_message': new_product_message
     }
 
 
@@ -26,7 +30,7 @@ async def start(message: types.Message):
         username=message.chat.username)
     try:
         await chat.save()
-    except UniqueViolationError:
+    except IntegrityError:
         pass
     await message.reply(MESSAGES['start'])
 

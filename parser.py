@@ -39,22 +39,18 @@ def get_stock(html):
 def get_title(html):
     soup = BeautifulSoup(html, 'html.parser')
     title = soup.find('h1', class_='product-title').text.strip()
-    # print(in_stock)
     return title
 
 
 def get_page_data(html, url):
-    stock_row_data_list = []
     row_data = {'title': get_title(html),
                 'in_stock': get_stock(html),
                 'url': url}
-
-    stock_row_data_list.append(row_data)
-    print(stock_row_data_list)
-    return stock_row_data_list
+    print(row_data)
+    return row_data
 
 async def get_general_data():
-    url = 'https://sigil.me/collection/all'
+    url = 'https://sigil.me/collection/all/'
     page_part = '?PAGEN_1='
 
     full_row_data_list = []
@@ -68,5 +64,6 @@ async def get_general_data():
     print(all_links)
     for link in all_links:
         stock_row_data_list = get_page_data(await get_html(link), link)
-        full_row_data_list += stock_row_data_list
+        full_row_data_list.append(stock_row_data_list)
+    print(full_row_data_list)
     return full_row_data_list
