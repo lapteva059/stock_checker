@@ -23,6 +23,7 @@ async def update():
 
 
 async def main():
+    await asyncio.sleep(15)
     await init_db()
     await update()
 

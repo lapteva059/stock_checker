@@ -13,13 +13,16 @@ services:
       POSTGRES_USER: admin
       POSTGRES_PASSWORD: admin
       POSTGRES_DB: tammytanuka
-      PGDATA: /data/postgres
+      PGDATA: /data/postgres2
     volumes:
        - postgres-db:/data/postgres
     ports:
-      - "5431:5431"
+      - "5432:5432"
+    expose:
+      - "5432"
 
   web:
+    restart: always
     build: .
     container_name: bot
     ports:
