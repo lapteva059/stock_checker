@@ -1,25 +1,37 @@
-version: '3.5'
+version: '3.3'
 
 
 services:
   postgres:
+    restart: always
+    hostname: postgres
+    networks:
+      - mynet
     container_name: postgres_demo
     image: postgres:latest
     environment:
-      POSTGRES_USER: super_admin
-      POSTGRES_PASSWORD: SomeSecretPassword
+      POSTGRES_USER: admin
+      POSTGRES_PASSWORD: admin
       POSTGRES_DB: tammytanuka
       PGDATA: /data/postgres
     volumes:
        - postgres-db:/data/postgres
     ports:
-      - "5432:5432"
+      - "5431:5431"
+
   web:
+    build: .
     container_name: bot
-    command: python main.py
     ports:
       - "80:80"
+    depends_on:
+      - postgres
+    networks:
+      - mynet
 
+networks:
+  mynet:
+    {}
 
 volumes:
   postgres-db:

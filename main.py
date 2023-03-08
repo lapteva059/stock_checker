@@ -13,6 +13,7 @@ async def init_db():
         db_url=settings.db_url,
         modules={'models': ['models']}
     )
+    await Tortoise.generate_schemas()
 
     # обновление БД
 async def update():
